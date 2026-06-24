@@ -1,15 +1,63 @@
 classDiagram
-    %% Replace the placeholders below with your actual classes, attributes, methods, and relationships.
-    %% Keep this file updated so it matches your final implementation.
+    %% PawPal+ — working UML draft (Phase 3). Update in Phase 6 to match the final code.
 
-    class ClassName {
-        +type attribute
-        +method() returnType
+    class Owner {
+        +str name
+        +int available_minutes
+        +dict preferences
+        +add_pet(pet) None
+        +set_available_time(minutes) None
+        +set_preference(key, value) None
     }
 
-    class AnotherClass {
-        +type attribute
-        +method() returnType
+    class Pet {
+        +str name
+        +str species
+        +str notes
+        +describe() str
     }
 
-    ClassName --> AnotherClass : relationship
+    class CareTask {
+        +str title
+        +int duration_minutes
+        +str priority
+        +str recurrence
+        +str preferred_time
+        +priority_rank() int
+        +update(...) None
+        +is_due_today() bool
+    }
+
+    class Scheduler {
+        +list~CareTask~ tasks
+        +int available_minutes
+        +dict preferences
+        +add_task(task) None
+        +remove_task(task) None
+        +sort_tasks() list~CareTask~
+        +build_plan() DailyPlan
+        +explain() str
+    }
+
+    class DailyPlan {
+        +list~PlanEntry~ entries
+        +int total_minutes
+        +list~CareTask~ skipped_tasks
+        +str reasoning
+        +add_entry(task, start_time) None
+        +summary() str
+        +to_table() list
+    }
+
+    class PlanEntry {
+        +CareTask task
+        +str start_time
+        +str end_time
+        +formatted() str
+    }
+
+    Owner "1" --> "*" Pet : has
+    Scheduler "1" --> "*" CareTask : holds
+    Scheduler "1" --> "1" DailyPlan : produces
+    DailyPlan "1" --> "*" PlanEntry : contains
+    PlanEntry "1" --> "1" CareTask : wraps
